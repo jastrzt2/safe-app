@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/password_entropy.js') }}"></script>
+</head>
+
+<body>
+    <h1>Welcome to Safe Notes Application</h1>
+
+    {% if current_user %}
+        <p>Logged in as: {{ current_user[1] }}</p>
+        <p><a href="{{ url_for('logout') }}">Log out</a></p>
+        <a href="{{ url_for('change_password') }}">Change password</a>
+
+        <h2><a href="{{ url_for('add_note') }}">Add new note</a></h2>
+
+        <p><a href="/user/{{ current_user[0] }}">My profile</a></p>
+
+        <h2>Last logging attempts:</h2>
+        {% if login_attempts %}
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>IP</th>
+                    <th>Time</th>
+                    <th>User Agent</th>
+                    <th>Status</th>
+                </tr>
+                {% for attempt in login_attempts %}
+                <tr>
+                    <td>{{ attempt[0] }}</td>
+                    <td>{{ attempt[1] }}</td>
+                    <td>{{ attempt[2] }}</td>
+                    <td>{{ attempt[3] }}</td>
+                    <td>
+                        {% if attempt[4] == 1 %}
+                            <span class="success">Successed</span>
+                        {% else %}
+                            <span class="fail">Failed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No data about last logging attempts.</p>
+        {% endif %}
+
+        <h2>Unique logging attempts:</h2>
+        {% if unique_ips %}
+            <table>
+                <tr>
+                    <th>IP</th>
+                    <th>Count of attempts</th>
+                </tr>
+                {% for ip, count in unique_ips %}
+                <tr>
+                    <td>{{ ip }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No unique IP.</p>
+        {% endif %}
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('register') }}">Register</a></p>
+    {% endif %}
+
+    <h2>Last notes:</h2>
+    <ul>
+        {% for note in notes %}
+            <li><strong><a href="/notes/{{ note[0] }}">{{ note[2] }}</a></strong>: {{ note[1] }}</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{{ url_for('all_notes') }}">See all notes</a></p>
+
+    <h2>Last registered users:</h2>
+    <ul>
+        {% for user in users %}
+            <li><a href="/user/{{ user[0] }}">{{ user[1] }}</a></li>
+        {% endfor %}
+    </ul>
+    <p><a href="{{ url_for('all_users') }}">See all users</a></p>
+</body>
+
+</html>
