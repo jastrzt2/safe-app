@@ -1,5 +1,5 @@
 # Description
-This project is a simple Flask app with main focus on safety.
+This project is a simple Flask app with main focus on safety. Functionality and UI were second priority.
 # Features
 - Negative Validation of user inputs
 - Tracking of login attempts and enforcement of delays
